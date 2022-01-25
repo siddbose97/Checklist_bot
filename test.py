@@ -2,8 +2,14 @@ from construct import Check
 from pymongo import MongoClient
 import datetime
 from pprint import pprint
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # connect to MongoDB, change the << MONGODB URL >> to reflect your own connection string
-client = MongoClient('mongodb+srv://admin:IAm62FMD@checklistbot.wk5m8.mongodb.net')
+mongo_string = os.getenv('MONGO_STRING')
+client = MongoClient(mongo_string)
 db = client.gettingStarted
 
 class Checklist:
@@ -32,7 +38,7 @@ if new_check_dict is not None:
     checked = new_check_dict["checked"]
     unchecked = new_check_dict["unchecked"]
 
-    checked.append("sidd")
+    checked.append("sidd1")
     unchecked.remove("sidd")
     
     newvalues = { "$set": { 'unchecked': unchecked } }
