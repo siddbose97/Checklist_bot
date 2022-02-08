@@ -19,11 +19,18 @@ def checkpw(update_obj, context):
         msg = update_obj.message.text
         pw = "admin62"
         if msg == pw:
-            update_obj.message.reply_text("Correct PW!")
-            return END
+            update_obj.message.reply_text("Correct PW! Please type in name of checklist")
+            return NAMECL
         else:
             update_obj.message.reply_text("SORRY INCORRECT PW")
-            return END
+        return ConversationHandler.END    
+    except Exception as e:
+        cancel(e, context)
+
+def namecl(update_obj, context):
+    try:
+        msg = update_obj.message.text
+        update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
     except Exception as e:
         cancel(e, context)
 

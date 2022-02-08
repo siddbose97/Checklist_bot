@@ -35,7 +35,6 @@ def start(update_obj, context):
     try:
 
         update_obj.message.reply_text("Hello there, which unit are you from?")
-    # go to the Batallion state
         return END
     except Exception as e:
         cancel(e, context)
