@@ -25,7 +25,7 @@ updater = Updater(API_KEY)
 dispatcher = updater.dispatcher
 # Our states, as integers
 
-CREATE,CHECKPW, END, CANCEL = range(11)
+CREATE,CHECKPW, END, CANCEL = range(4)
 
 
 # The entry function
