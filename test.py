@@ -1,4 +1,3 @@
-from construct import Check
 from pymongo import MongoClient
 import datetime
 from pprint import pprint
@@ -46,3 +45,31 @@ if new_check_dict is not None:
 
     checklists.update_one({'name' :new_check.name},newvalues)
     checklists.update_one({'name' :new_check.name},newvalues1)
+
+
+#create database 
+db = client.checklists
+
+#create collection 
+active_checklists = db.active_checklists
+
+#add checklist (document) to collection 
+result = active_checklists.insert_one({"date":datetime.datetime.today()})
+
+#make a query
+week_ago = datetime.datetime.today()- datetime.timedelta(days=7)
+my_query = {"date": {"$lt":week_ago}}
+
+name_query = {"name": "new checklist"}
+
+#find checklist
+cursor = active_checklists.find(my_query)
+cursor1= active_checklists.find(name_query)
+
+#write to/update checklist
+
+#delete checklist
+
+#change default roster
+
+#delete checklist(s) based on date query
