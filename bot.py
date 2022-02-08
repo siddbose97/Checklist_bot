@@ -5,7 +5,7 @@ import os
 from pymongo import MongoClient
 import datetime
 import logging
-from create import create, checkpw
+from create import create, checkpw, namecl
 from dotenv import load_dotenv
 
 
@@ -80,6 +80,7 @@ def main():
         entry_points=[CommandHandler('start', start),CommandHandler('create', create),CommandHandler('help', help)],
         states={
                 CHECKPW: [MessageHandler(Filters.text, checkpw)],
+                NAMECL: [MessageHandler(Filters.text, namecl)],
                 END: [MessageHandler(Filters.text, end)],
                 CANCEL: [MessageHandler(Filters.text, cancel)]
         },

@@ -23,7 +23,7 @@ def checkpw(update_obj, context):
             return NAMECL
         else:
             update_obj.message.reply_text("SORRY INCORRECT PW")
-        return ConversationHandler.END    
+            return ConversationHandler.END    
     except Exception as e:
         cancel(e, context)
 
@@ -31,6 +31,7 @@ def namecl(update_obj, context):
     try:
         msg = update_obj.message.text
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
+        return ConversationHandler.END
     except Exception as e:
         cancel(e, context)
 
