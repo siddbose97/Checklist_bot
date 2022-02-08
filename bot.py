@@ -47,6 +47,8 @@ def end(update_obj, context):
     try:
         chat_id = update_obj.message.chat_id
         msg = update_obj.message.text
+        update_obj.message.reply_text("Thanks")
+
         return ConversationHandler.END
     except Exception as e:        
         cancel(update_obj, context)
