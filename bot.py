@@ -25,7 +25,7 @@ updater = Updater(API_KEY)
 dispatcher = updater.dispatcher
 # Our states, as integers
 
-BATSTEP, COYSTEP, WPNSTEP,BUTTSTEP, DEFECTSTEP, DEFECTIDSTEP, RMKCHKSTEP, YESORNO, RMKSTEP, END, CANCEL = range(11)
+CREATE,CHECKPW, END, CANCEL = range(11)
 
 
 # The entry function
@@ -39,9 +39,28 @@ def start(update_obj, context):
     except Exception as e:
         cancel(e, context)
 
+def create(update_obj, context):
+      
+    try:
+        update_obj.message.reply_text("Please enter password to create checklist")
+    # go to the Batallion state
+        return CHECKPW
+    except Exception as e:
+        cancel(e, context)
 
-
-
+def checkpw(update_obj, context):
+    try:
+        msg = update_obj.message.text
+        pw = "admin62"
+        if msg == pw:
+            update_obj.message.reply_text("Correct PW!")
+            return END
+        else:
+            update_obj.message.reply_text("SORRY INCORRECT PW")
+            return END
+    except Exception as e:
+        cancel(e, context)
+        
 
 def end(update_obj, context):
     try:
@@ -79,7 +98,7 @@ def main():
 
 
     handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),CommandHandler('help', help)],
+        entry_points=[CommandHandler('start', start),CommandHandler('create', create),CommandHandler('help', help)],
         states={
                 END: [MessageHandler(Filters.text, end)],
                 CANCEL: [MessageHandler(Filters.text, cancel)]
