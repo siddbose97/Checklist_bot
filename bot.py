@@ -25,7 +25,7 @@ updater = Updater(API_KEY)
 dispatcher = updater.dispatcher
 # Our states, as integers
 
-CREATE,CHECKPW, END, CANCEL = range(4)
+CREATE, CHECKPW, END, CANCEL = range(4)
 
 
 # The entry function
@@ -100,6 +100,7 @@ def main():
     handler = ConversationHandler(
         entry_points=[CommandHandler('start', start),CommandHandler('create', create),CommandHandler('help', help)],
         states={
+                CHECKPW: [MessageHandler(Filters.text, checkpw)],
                 END: [MessageHandler(Filters.text, end)],
                 CANCEL: [MessageHandler(Filters.text, cancel)]
         },
