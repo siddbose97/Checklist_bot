@@ -10,7 +10,7 @@ CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
 load_dotenv()
 
 mongo_string = os.getenv('MONGO_STRING')
-client = MongoClient(mongo_string)
+
 
 ########################################################################
 
@@ -40,12 +40,12 @@ def checkpw(update_obj, context):
 def namecl(update_obj, context):
     try:
         msg = update_obj.message.text
-
+        client = MongoClient(mongo_string)
         db = client.checklists
         active_checklists = db.active_checklists
 
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
-        result = active_checklists.insert_one({"checklist name":msg})
+        active_checklists.insert_one({"checklist name":msg})
 
         return ConversationHandler.END
     except Exception as e:
