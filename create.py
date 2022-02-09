@@ -1,9 +1,18 @@
+from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
 import telegram
 import telegram.ext
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
 
+########################################################################
+load_dotenv()
 
+mongo_string = os.getenv('MONGO_STRING')
+client = MongoClient(mongo_string)
+
+########################################################################
 
 def create(update_obj, context):
       
@@ -30,6 +39,11 @@ def checkpw(update_obj, context):
 def namecl(update_obj, context):
     try:
         msg = update_obj.message.text
+
+        db = client.checklists
+        active_checklists = db.active_checklists
+        result = active_checklists.insert_one({"checklist name":msg})
+
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
         return ConversationHandler.END
     except Exception as e:
