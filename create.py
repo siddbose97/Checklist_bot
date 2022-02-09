@@ -7,9 +7,7 @@ from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHa
 CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
 
 ########################################################################
-load_dotenv()
 
-mongo_string = str(os.getenv('MONGO_STRING'))
 
 
 ########################################################################
@@ -25,6 +23,9 @@ def create(update_obj, context):
 
 def checkpw(update_obj, context):
     try:
+        load_dotenv()
+
+        mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
         client = MongoClient(mongo_string)
         db = client.checklists
