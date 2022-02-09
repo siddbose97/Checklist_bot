@@ -29,21 +29,23 @@ def checkpw(update_obj, context):
         client = MongoClient(mongo_string)
         db = client.checklists
         creds = db.creds
-        my_query = {"password": msg}
+        creds.insert_one({"password":"hi"})
+        return ConversationHandler.END
+        # my_query = {"password": msg}
 
-        try:
-            cursor = creds.find(my_query)
-            update_obj.message.reply_text(mongo_string)
-            return NAMECL
+        # try:
+        #     
+        #     update_obj.message.reply_text(cursor)
+        #     return NAMECL
 
         # pw = "admin62"
         # if msg == pw:
         #     # update_obj.message.reply_text("Correct PW! Please type in name of checklist")
-        #     update_obj.message.reply_text(mongo_string)
+        #     update_obj.message.reply_text(type(mongo_string))
         #     return NAMECL
-        except:
-            update_obj.message.reply_text("SORRY INCORRECT PW")
-            return ConversationHandler.END    
+        # except:
+        #     update_obj.message.reply_text("SORRY INCORRECT PW")
+        #     return ConversationHandler.END    
     except Exception as e:
         cancel(e, context)
 
