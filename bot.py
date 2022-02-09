@@ -27,15 +27,21 @@ dispatcher = updater.dispatcher
 # Our states, as integers
 
 CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
+load_dotenv()
 
+mongo_string = os.getenv('MONGO_STRING')
 
 # The entry function
 def start(update_obj, context):
   
     try:
 
-        update_obj.message.reply_text("Hello there, which unit are you from?")
-        return END
+        client = MongoClient(mongo_string)
+        db = client.checklists
+        creds = db.creds
+        creds.insert_one({"date":datetime.datetime.today()})
+        update_obj.message.reply_text("Thanks")
+        return ConversationHandler.END 
     except Exception as e:
         cancel(e, context)
 
