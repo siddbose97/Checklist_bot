@@ -24,13 +24,19 @@ def create(update_obj, context):
 def checkpw(update_obj, context):
     try:
         load_dotenv()
-
+        print("here1")
         mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
+        print("here2")
+
         client = MongoClient(mongo_string)
         db = client.checklists
         creds = db.creds
+        print("here3")
+
         creds.insert_one({"password":"hi"})
+        print("here4")
+
         return ConversationHandler.END
         # my_query = {"password": msg}
 
