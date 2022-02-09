@@ -43,7 +43,8 @@ def namecl(update_obj, context):
         client = MongoClient(mongo_string)
         db = client.checklists
         active_checklists = db.active_checklists
-
+        print(f"db = {db}")
+        print(f"checklists={active_checklists}")
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
         active_checklists.insert_one({"checklist name":msg})
 
