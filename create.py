@@ -9,7 +9,7 @@ CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
 ########################################################################
 load_dotenv()
 
-mongo_string = os.getenv('MONGO_STRING')
+mongo_string = str(os.getenv('MONGO_STRING'))
 
 
 ########################################################################
@@ -66,7 +66,7 @@ def namecl(update_obj, context):
 
 def cancel(update_obj, context):
     # get the user's first name
-    update_obj.message.reply_text(
-        f"Okay, no question for you then, take care! Please click /start to start again",\
-             reply_markup=telegram.ReplyKeyboardRemove())
+    #update_obj.message.reply_text(
+    #    f"Okay, no question for you then, take care! Please click /start to start again",\
+    #         reply_markup=telegram.ReplyKeyboardRemove())
     return ConversationHandler.END
