@@ -26,12 +26,22 @@ def create(update_obj, context):
 def checkpw(update_obj, context):
     try:
         msg = update_obj.message.text
-        pw = "admin62"
-        if msg == pw:
-            # update_obj.message.reply_text("Correct PW! Please type in name of checklist")
+        client = MongoClient(mongo_string)
+        db = client.checklists
+        creds = db.creds
+        my_query = {"password": msg}
+
+        try:
+            cursor = creds.find(my_query)
             update_obj.message.reply_text(mongo_string)
             return NAMECL
-        else:
+
+        # pw = "admin62"
+        # if msg == pw:
+        #     # update_obj.message.reply_text("Correct PW! Please type in name of checklist")
+        #     update_obj.message.reply_text(mongo_string)
+        #     return NAMECL
+        except:
             update_obj.message.reply_text("SORRY INCORRECT PW")
             return ConversationHandler.END    
     except Exception as e:
@@ -40,13 +50,13 @@ def checkpw(update_obj, context):
 def namecl(update_obj, context):
     try:
         msg = update_obj.message.text
-        client = MongoClient(mongo_string)
-        db = client.checklists
-        active_checklists = db.active_checklists
-        print(f"db = {db}")
-        print(f"checklists={active_checklists}")
+        # client = MongoClient(mongo_string)
+        # db = client.checklists
+        # active_checklists = db.active_checklists
+        # print(f"db = {db}")
+        # print(f"checklists={active_checklists}")
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
-        active_checklists.insert_one({"checklist name":msg})
+        # active_checklists.insert_one({"checklist name":msg})
 
         return ConversationHandler.END
     except Exception as e:
