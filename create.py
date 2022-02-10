@@ -24,6 +24,8 @@ class Checklist:
             "date":self.date
         }
 
+        return dic
+
 
 ########################################################################
 
@@ -71,7 +73,9 @@ def namecl(update_obj, context):
         print(roster)
         new_check = Checklist(roster, msg)
         print("here4")
-        active_checklists.insert_one(new_check.ret_dict())
+        doc_to_insert = new_check.ret_dict()
+        print(doc_to_insert)
+        active_checklists.insert_one(doc_to_insert)
         print("here5")
 
         #still need to check for old dicts and remove them
