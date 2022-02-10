@@ -1,4 +1,3 @@
-from construct import Check
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
@@ -6,7 +5,8 @@ import telegram
 import telegram.ext
 from datetime import datetime, timedelta
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
-CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
+
+CREATE, CHECKPW, NAMECL, CREATECL,CHECKCL,PRINTCL, END, CANCEL = range(8)
 
 ########################################################################
 class Checklist:
@@ -21,7 +21,8 @@ class Checklist:
             "name":self.name,
             "unchecked":self.unchecked,
             "checked":self.checked,
-            "date":self.date
+            "date":self.date,
+            "is_list":"yes"
         }
 
         return dic
@@ -73,7 +74,8 @@ def namecl(update_obj, context):
         doc_to_insert = new_check.ret_dict()
         active_checklists.insert_one(doc_to_insert)
 
-        #still need to check for old dicts and remove them
+        #still need to check if a checklist with the given name already exists!!!!!!
+        
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
         
         print("here1")

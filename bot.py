@@ -6,6 +6,7 @@ from pymongo import MongoClient
 import datetime
 import logging
 from create import create, checkpw, namecl
+from check import checkcl, printcl
 from dotenv import load_dotenv
 
 
@@ -26,7 +27,7 @@ updater = Updater(API_KEY)
 dispatcher = updater.dispatcher
 # Our states, as integers
 
-CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
+CREATE, CHECKPW, NAMECL, CREATECL,CHECKCL,PRINTCL, END, CANCEL = range(8)
 load_dotenv()
 
 mongo_string = os.getenv('MONGO_STRING')
@@ -83,10 +84,11 @@ def main():
 
 
     handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),CommandHandler('create', create),CommandHandler('help', help)],
+        entry_points=[CommandHandler('start', start),CommandHandler('create', create),CommandHandler('check', checkcl),CommandHandler('help', help)],
         states={
                 CHECKPW: [MessageHandler(Filters.text, checkpw)],
                 NAMECL: [MessageHandler(Filters.text, namecl)],
+                PRINTCL: [MessageHandler(Filters.text, printcl)],
                 END: [MessageHandler(Filters.text, end)],
                 CANCEL: [MessageHandler(Filters.text, cancel)]
         },
