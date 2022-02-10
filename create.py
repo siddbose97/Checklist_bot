@@ -40,15 +40,11 @@ def checkpw(update_obj, context):
         load_dotenv()
         mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
-        print("here1")
         client = MongoClient(mongo_string)
         db = client.checklists
         creds = db.creds
-        print("here2")
         my_query = {"password": msg}
-        print("here3")
         if creds.count_documents(my_query, limit = 1):
-            print("here4")
             update_obj.message.reply_text("Thank you, please enter name of new checklist")
             return NAMECL
         else:
@@ -65,16 +61,20 @@ def namecl(update_obj, context):
         mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
         client = MongoClient(mongo_string)
+        print("here1")
 
         db = client.checklists
         active_checklists = db.active_checklists
+        print("here2")
 
         roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
         new_check = Checklist(roster, msg)
         active_checklists.insert_one(new_check.ret_dict())
+        print("here3")
 
         #still need to check for old dicts and remove them
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
+        print("here4")
 
         return ConversationHandler.END
     except Exception as e:
