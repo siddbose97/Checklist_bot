@@ -70,17 +70,19 @@ def namecl(update_obj, context):
         print("here2")
 
         roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
-        print(roster)
         new_check = Checklist(roster, msg)
-        print("here4")
         doc_to_insert = new_check.ret_dict()
-        print(doc_to_insert)
         active_checklists.insert_one(doc_to_insert)
-        print("here5")
 
         #still need to check for old dicts and remove them
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
-        print("here6")
+        
+        week_ago = datetime.datetime.today()- datetime.timedelta(days=7)
+        week_ago_query = {"date": {"$lt":week_ago}}
+        cursor = active_checklists.find(week_ago_query)
+
+        for old_checklist in cursor:
+            active_checklists.delete_one(old_checklist)
 
         return ConversationHandler.END
     except Exception as e:
