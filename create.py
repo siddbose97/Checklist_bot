@@ -46,8 +46,9 @@ def checkpw(update_obj, context):
         creds = db.creds
         print("here2")
         my_query = {"password": msg}
-        if creds.find(my_query).count() > 0:
-            print("here3")
+        print("here3")
+        if creds.count_documents(my_query, limit = 1):
+            print("here4")
             update_obj.message.reply_text("Thank you, please enter name of new checklist")
             return NAMECL
         else:
