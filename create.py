@@ -1,13 +1,28 @@
+from construct import Check
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 import telegram
 import telegram.ext
+from datetime import datetime
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
 
 ########################################################################
-
+class Checklist:
+    def __init__(self, roster, name):
+        self.name = name
+        self.unchecked = roster
+        self.checked = []
+        self.date = datetime.today()
+    
+    def ret_dict(self):
+        dic = {
+            "name":self.name,
+            "unchecked":self.unchecked,
+            "checked":self.checked,
+            "date":self.date
+        }
 
 
 ########################################################################
@@ -24,48 +39,39 @@ def create(update_obj, context):
 def checkpw(update_obj, context):
     try:
         load_dotenv()
-        print("here1")
         mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
-        print("here2")
-
         client = MongoClient(mongo_string)
         db = client.checklists
         creds = db.creds
-        print("here3")
-
-        creds.insert_one({"password":"hi"})
-        print("here4")
-
-        return ConversationHandler.END
-        # my_query = {"password": msg}
-
-        # try:
-        #     
-        #     update_obj.message.reply_text(cursor)
-        #     return NAMECL
-
-        # pw = "admin62"
-        # if msg == pw:
-        #     # update_obj.message.reply_text("Correct PW! Please type in name of checklist")
-        #     update_obj.message.reply_text(type(mongo_string))
-        #     return NAMECL
-        # except:
-        #     update_obj.message.reply_text("SORRY INCORRECT PW")
-        #     return ConversationHandler.END    
+        my_query = {"password": msg}
+        if creds.find(my_query).count() > 0:
+            update_obj.message.reply_text("Thank you, please enter name of new checklist")
+            return NAMECL
+        else:
+            update_obj.message.reply_text("SORRY INCORRECT PW")
+            return ConversationHandler.END
+   
     except Exception as e:
         cancel(e, context)
 
 def namecl(update_obj, context):
     try:
         msg = update_obj.message.text
-        # client = MongoClient(mongo_string)
-        # db = client.checklists
-        # active_checklists = db.active_checklists
-        # print(f"db = {db}")
-        # print(f"checklists={active_checklists}")
+        load_dotenv()
+        mongo_string = str(os.getenv('MONGO_STRING'))
+        msg = update_obj.message.text
+        client = MongoClient(mongo_string)
+
+        db = client.checklists
+        active_checklists = db.active_checklists
+
+        roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
+        new_check = Checklist(roster, msg)
+        active_checklists.insert_one(new_check.ret_dict())
+
+        #still need to check for old dicts and remove them
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
-        # active_checklists.insert_one({"checklist name":msg})
 
         return ConversationHandler.END
     except Exception as e:
