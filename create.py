@@ -68,9 +68,10 @@ def namecl(update_obj, context):
         print("here2")
 
         roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
+        print(roster)
         new_check = Checklist(roster, msg)
         active_checklists.insert_one(new_check.ret_dict())
-        print("here3")
+        print("here4")
 
         #still need to check for old dicts and remove them
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
