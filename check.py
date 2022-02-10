@@ -21,7 +21,7 @@ def checkcl(update_obj, context):
         cursor = active_checklists.find(is_list_query)
         print("here2")
         for checklist in cursor:
-            arr_of_checklists.append(checklist.name)
+            arr_of_checklists.append(checklist["name"])
         print("here3")
         if arr_of_checklists:
             print("here4")
