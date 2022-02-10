@@ -54,10 +54,16 @@ def printcl(update_obj, context):
         checked = checklist["checked"]
         unchecked = checklist["unchecked"]
 
-        
+        checked_string = "People who have been checked off: "
+        for names in checked:
+            checked_string += names
+        unchecked_string = "People who have NOT been checked off: "
+        for names in unchecked:
+            unchecked_string += names
+
         update_obj.message.reply_text(f"For the checklist named {msg} the information is as follows:")
-        update_obj.message.reply_text(f"People who have been checked off: {*checked,}")
-        update_obj.message.reply_text(f"People who have NOT been checked off: {*unchecked,}")
+        update_obj.message.reply_text(checked_string)
+        update_obj.message.reply_text(unchecked_string)
 
         return ConversationHandler.END
     except Exception as e:
