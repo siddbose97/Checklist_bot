@@ -63,11 +63,10 @@ def namecl(update_obj, context):
         mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
         client = MongoClient(mongo_string)
-        print("here1")
 
         db = client.checklists
         active_checklists = db.active_checklists
-        print("here2")
+        
 
         roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
         new_check = Checklist(roster, msg)
@@ -77,11 +76,13 @@ def namecl(update_obj, context):
         #still need to check for old dicts and remove them
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
         
+        print("here1")
         week_ago = datetime.datetime.today()- datetime.timedelta(days=7)
         week_ago_query = {"date": {"$lt":week_ago}}
         cursor = active_checklists.find(week_ago_query)
-
+        print("here2")
         for old_checklist in cursor:
+            print(old_checklist)
             active_checklists.delete_one(old_checklist)
 
         return ConversationHandler.END
