@@ -31,7 +31,6 @@ def create(update_obj, context):
       
     try:
         update_obj.message.reply_text("Please enter password to create checklist")
-    # go to the Batallion state
         return CHECKPW
     except Exception as e:
         cancel(e, context)
@@ -41,11 +40,14 @@ def checkpw(update_obj, context):
         load_dotenv()
         mongo_string = str(os.getenv('MONGO_STRING'))
         msg = update_obj.message.text
+        print("here1")
         client = MongoClient(mongo_string)
         db = client.checklists
         creds = db.creds
+        print("here2")
         my_query = {"password": msg}
         if creds.find(my_query).count() > 0:
+            print("here3")
             update_obj.message.reply_text("Thank you, please enter name of new checklist")
             return NAMECL
         else:
