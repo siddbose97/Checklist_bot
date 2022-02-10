@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import telegram
 import telegram.ext
-from datetime import datetime
+from datetime import datetime, timedelta
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 CREATE, CHECKPW, NAMECL, CREATECL, END, CANCEL = range(6)
 
@@ -77,7 +77,7 @@ def namecl(update_obj, context):
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
         
         print("here1")
-        week_ago = datetime.datetime.today()- datetime.timedelta(days=7)
+        week_ago = datetime.today()- timedelta(days=7)
         week_ago_query = {"date": {"$lt":week_ago}}
         cursor = active_checklists.find(week_ago_query)
         print("here2")
