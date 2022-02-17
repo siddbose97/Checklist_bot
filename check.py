@@ -54,16 +54,16 @@ def printcl(update_obj, context):
         checked = checklist["checked"]
         unchecked = checklist["unchecked"]
 
-        checked_string = "People who have been checked off: "
+        checked_string = "People who have been checked off: \n"
         for names in checked:
             checked_string += names
             checked_string += "\n"
-        unchecked_string = "People who have NOT been checked off: "
+        unchecked_string = "People who have NOT been checked off: \n"
         for names in unchecked:
             unchecked_string += names
             unchecked_string += "\n"
 
-        update_obj.message.reply_text(f"For the checklist named {msg} the information is as follows:")
+        update_obj.message.reply_text(f"For the checklist named {msg} the information is as follows:", reply_markup=telegram.ReplyKeyboardRemove())
         update_obj.message.reply_text(checked_string)
         update_obj.message.reply_text(unchecked_string)
 
