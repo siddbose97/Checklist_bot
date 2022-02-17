@@ -79,7 +79,7 @@ def namecl(update_obj, context):
         update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
         
         print("here1")
-        week_ago = datetime.today()- timedelta(days=7)
+        week_ago = datetime.today()- timedelta(days=5)
         week_ago_query = {"date": {"$lt":week_ago}}
         cursor = active_checklists.find(week_ago_query)
         print("here2")
