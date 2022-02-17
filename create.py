@@ -6,7 +6,7 @@ import telegram.ext
 from datetime import datetime, timedelta
 from telegram.ext import Updater, ConversationHandler, CommandHandler, MessageHandler, Filters
 
-CREATE, CHECKPW, NAMECL, CREATECL,CHECKCL,PRINTCL, END, CANCEL = range(8)
+CREATE, CHECKPW, NAMECL, CREATECL,CHECKCL,PRINTCL, ACCESSCL, CHOOSECL, ENTERNAME, RETCL, END, CANCEL = range(12)
 
 ########################################################################
 class Checklist:
