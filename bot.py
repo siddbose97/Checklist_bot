@@ -7,7 +7,7 @@ import datetime
 import logging
 from create import create, checkpw, namecl
 from check import checkcl, printcl
-from access import accesscl, choosecl, entername, retcl
+from access import accesscl, choosecl, entername
 from dotenv import load_dotenv
 
 
@@ -33,50 +33,35 @@ load_dotenv()
 
 mongo_string = os.getenv('MONGO_STRING')
 
-# The entry function
-def start(update_obj, context):
-  
+
+def help(update_obj, context):
+      
     try:
 
-        client = MongoClient(mongo_string)
-        db = client.checklists
-        creds = db.creds
-        creds.insert_one({"date":datetime.datetime.today()})
-        update_obj.message.reply_text("Thanks")
+        ret_string = """
+        
+        Commands are as follows:
+        /create - create a new checklist (requires admin password)
+        /access - add your name to a checklist
+        /check - check the status of an active checklist
+        
+        Thanks for using the checklist bot!
+        """
+        update_obj.message.reply_text(ret_string)
         return ConversationHandler.END 
     except Exception as e:
-        cancel(e, context)
-
-        
-
-def end(update_obj, context):
-    try:
-        chat_id = update_obj.message.chat_id
-        msg = update_obj.message.text
-        update_obj.message.reply_text("Thanks")
-
-        return ConversationHandler.END
-    except Exception as e:        
-        cancel(update_obj, context)
-        return ConversationHandler.END 
-    
-
-
+        cancel(e, context)       
 
 
 def cancel(update_obj, context):
-    # get the user's first name
-    first_name = update_obj.message.from_user['first_name']
     update_obj.message.reply_text(
-        f"Okay, no question for you then, take care, {first_name}! Please click /start to start again",\
+        f"You have cancelled the transaction, please click /help for a list of commands",\
              reply_markup=telegram.ReplyKeyboardRemove())
     return ConversationHandler.END
 
 def outside_of_handler(update_obj, context):
-    # get the user's first name
-    first_name = update_obj.message.from_user['first_name']
     update_obj.message.reply_text(
-        f"Hi {first_name}! Please click /start to start the bot or click /help to learn more",\
+        f"Incorrect input, please click /help for a list of commands",\
              reply_markup=telegram.ReplyKeyboardRemove())
     return ConversationHandler.END
 
@@ -85,7 +70,7 @@ def main():
 
 
     handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),CommandHandler('create', create),CommandHandler('check', checkcl),\
+        entry_points=[CommandHandler('create', create),CommandHandler('check', checkcl),\
             CommandHandler('access', accesscl), CommandHandler('help', help)],
         states={
                 CHECKPW: [MessageHandler(Filters.text, checkpw)],
@@ -93,8 +78,6 @@ def main():
                 PRINTCL: [MessageHandler(Filters.text, printcl)],
                 CHOOSECL: [MessageHandler(Filters.text, choosecl)],
                 ENTERNAME: [MessageHandler(Filters.text, entername)],
-                #RETCL: [MessageHandler(Filters.text, retcl)],
-                END: [MessageHandler(Filters.text, end)],
                 CANCEL: [MessageHandler(Filters.text, cancel)]
         },
         fallbacks=[CommandHandler('cancel', cancel)],

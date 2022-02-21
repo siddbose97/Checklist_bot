@@ -51,7 +51,7 @@ def checkpw(update_obj, context):
             update_obj.message.reply_text("Thank you, please enter name of new checklist")
             return NAMECL
         else:
-            update_obj.message.reply_text("SORRY INCORRECT PW")
+            update_obj.message.reply_text("SORRY INCORRECT PW, click /help for a list of commands")
             return ConversationHandler.END
    
     except Exception as e:
@@ -68,16 +68,16 @@ def namecl(update_obj, context):
         db = client.checklists
         active_checklists = db.active_checklists
         
-
-        roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
-        new_check = Checklist(roster, msg)
-        doc_to_insert = new_check.ret_dict()
-        active_checklists.insert_one(doc_to_insert)
-
-        #still need to check if a checklist with the given name already exists!!!!!!
-        
-        update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
-        
+        res = active_checklists.find_one({"name":msg})
+        if res == None:
+            roster = active_checklists.find_one({"is_roster":"yes"})["roster"]
+            new_check = Checklist(roster, msg)
+            doc_to_insert = new_check.ret_dict()
+            active_checklists.insert_one(doc_to_insert)
+            
+            update_obj.message.reply_text(f"Your new checklist is named {msg}. Please ask depot to access this checklist")
+        else:
+            update_obj.message.reply_text(f"A checklist with this name already exists. Please create a new checklist or use the active one")
         
         week_ago = datetime.today()- timedelta(days=5)
         week_ago_query = {"date": {"$lt":week_ago}}
@@ -92,8 +92,7 @@ def namecl(update_obj, context):
         cancel(e, context)
 
 def cancel(update_obj, context):
-    # get the user's first name
-    #update_obj.message.reply_text(
-    #    f"Okay, no question for you then, take care! Please click /start to start again",\
-    #         reply_markup=telegram.ReplyKeyboardRemove())
+    update_obj.message.reply_text(
+        f"You have cancelled the transaction, please click /help for a list of commands",\
+             reply_markup=telegram.ReplyKeyboardRemove())
     return ConversationHandler.END

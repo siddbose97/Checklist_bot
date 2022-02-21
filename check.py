@@ -31,8 +31,7 @@ def checkcl(update_obj, context):
             update_obj.message.reply_text("Please choose a checklist from the following active lists",reply_markup=kb)
             return PRINTCL
         else:
-            
-            update_obj.message.reply_text("There are no active checklists at the moment")
+            update_obj.message.reply_text("There are no active checklists at the moment. Please click /help for a list of commands")
             return ConversationHandler.END
     except Exception as e:
         cancel(e, context)
@@ -51,23 +50,26 @@ def printcl(update_obj, context):
         active_checklists = db.active_checklists
 
         checklist = active_checklists.find_one({"name":msg})
-        checked = checklist["checked"]
-        unchecked = checklist["unchecked"]
+        if checklist == None:
+            update_obj.message.reply_text(f"No checklist with the given name was found. Please click /help for a list of commands", reply_markup=telegram.ReplyKeyboardRemove())
+        else:
+            checked = checklist["checked"]
+            unchecked = checklist["unchecked"]
 
-        len_checked = len(checked)
-        len_unchecked = len(unchecked)
-        checked_string = f"People who have been checked off: {len_checked} \n"
-        for names in checked:
-            checked_string += names
-            checked_string += "\n"
-        unchecked_string = f"People who have NOT been checked off: {len_unchecked} \n"
-        for names in unchecked:
-            unchecked_string += names
-            unchecked_string += "\n"
+            len_checked = len(checked)
+            len_unchecked = len(unchecked)
+            checked_string = f"People who have been checked off: {len_checked} \n"
+            for names in checked:
+                checked_string += names
+                checked_string += "\n"
+            unchecked_string = f"People who have NOT been checked off: {len_unchecked} \n"
+            for names in unchecked:
+                unchecked_string += names
+                unchecked_string += "\n"
 
-        update_obj.message.reply_text(f"For the checklist named {msg} the information is as follows:", reply_markup=telegram.ReplyKeyboardRemove())
-        update_obj.message.reply_text(checked_string)
-        update_obj.message.reply_text(unchecked_string)
+            update_obj.message.reply_text(f"For the checklist named {msg} the information is as follows:", reply_markup=telegram.ReplyKeyboardRemove())
+            update_obj.message.reply_text(checked_string)
+            update_obj.message.reply_text(unchecked_string)
 
         return ConversationHandler.END
     except Exception as e:
@@ -75,8 +77,7 @@ def printcl(update_obj, context):
 
 
 def cancel(update_obj, context):
-    # get the user's first name
-    #update_obj.message.reply_text(
-    #    f"Okay, no question for you then, take care! Please click /start to start again",\
-    #         reply_markup=telegram.ReplyKeyboardRemove())
+    update_obj.message.reply_text(
+        f"You have cancelled the transaction, please click /help for a list of commands",\
+             reply_markup=telegram.ReplyKeyboardRemove())
     return ConversationHandler.END

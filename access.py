@@ -27,6 +27,7 @@ def accesscl(update_obj, context):
         if arr_of_checklists:
             
             list1 = [[telegram.KeyboardButton(text=checklist_name)] for checklist_name in arr_of_checklists]
+            list1.append([telegram.KeyboardButton(text="QUIT")])
             kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
             update_obj.message.reply_text("Please choose a checklist from the following active lists",reply_markup=kb)
@@ -42,6 +43,11 @@ def choosecl(update_obj, context):
       
     try:
         msg = update_obj.message.text
+
+        if msg == "QUIT":
+            cancel(update_obj, context)
+            return
+
         global checklist_name 
         checklist_name = msg
         load_dotenv()
@@ -54,10 +60,10 @@ def choosecl(update_obj, context):
         unchecked = checklist["unchecked"]
 
         list1 = [[telegram.KeyboardButton(text=names)] for names in unchecked]
+        list1.append([telegram.KeyboardButton(text="QUIT")])
         kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
         update_obj.message.reply_text("Please select your name from the list",reply_markup=kb)
-
 
         return ENTERNAME
     except Exception as e:
@@ -67,6 +73,10 @@ def entername(update_obj, context):
       
     try:
         msg = update_obj.message.text
+
+        if msg == "QUIT":
+            cancel(update_obj, context)
+            return
 
         load_dotenv()
         mongo_string = str(os.getenv('MONGO_STRING'))
@@ -96,26 +106,13 @@ def entername(update_obj, context):
         update_obj.message.reply_text(f"The updated checklist is as follows:", reply_markup=telegram.ReplyKeyboardRemove())
         update_obj.message.reply_text(checked_string)
         update_obj.message.reply_text(unchecked_string)
-
-
-
-
         return ConversationHandler.END
     except Exception as e:
         cancel(e, context)
 
-def retcl(update_obj, context):
-      
-    try:
-        
-
-        return ConversationHandler.END
-    except Exception as e:
-        cancel(e, context)
 
 def cancel(update_obj, context):
-    # get the user's first name
-    #update_obj.message.reply_text(
-    #    f"Okay, no question for you then, take care! Please click /start to start again",\
-    #         reply_markup=telegram.ReplyKeyboardRemove())
+    update_obj.message.reply_text(
+        f"You have cancelled the transaction, please click /help for a list of commands",\
+             reply_markup=telegram.ReplyKeyboardRemove())
     return ConversationHandler.END
