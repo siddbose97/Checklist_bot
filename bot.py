@@ -70,7 +70,7 @@ def main():
 
 
     handler = ConversationHandler(
-        entry_points=[CommandHandler('create', create),CommandHandler('check', checkcl),\
+        entry_points=[CommandHandler('start', help),CommandHandler('create', create),CommandHandler('check', checkcl),\
             CommandHandler('access', accesscl), CommandHandler('help', help)],
         states={
                 CHECKPW: [MessageHandler(Filters.text, checkpw)],
