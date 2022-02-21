@@ -110,7 +110,8 @@ def entername(update_obj, context):
             update_obj.message.reply_text(checked_string)
             update_obj.message.reply_text(unchecked_string)
         else:
-            update_obj.message.reply_text(f"Invalid input, name not in roster:", reply_markup=telegram.ReplyKeyboardRemove())
+            update_obj.message.reply_text(f"Invalid input, name not in roster. Please click /help for a list of commands",\
+                 reply_markup=telegram.ReplyKeyboardRemove())
         return ConversationHandler.END
     except Exception as e:
         cancel(e, context)
