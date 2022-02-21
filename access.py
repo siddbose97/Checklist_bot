@@ -46,7 +46,7 @@ def choosecl(update_obj, context):
 
         if msg == "QUIT":
             cancel(update_obj, context)
-            return
+            return ConversationHandler.END
 
         global checklist_name 
         checklist_name = msg
@@ -76,7 +76,7 @@ def entername(update_obj, context):
 
         if msg == "QUIT":
             cancel(update_obj, context)
-            return
+            return ConversationHandler.END
 
         load_dotenv()
         mongo_string = str(os.getenv('MONGO_STRING'))
