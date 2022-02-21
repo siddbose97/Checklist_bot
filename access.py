@@ -88,26 +88,29 @@ def entername(update_obj, context):
         checked = checklist["checked"]
         unchecked = checklist["unchecked"]
 
-        unchecked.remove(msg)
-        checked.append(msg)
+        if msg in unchecked:
+            unchecked.remove(msg)
+            checked.append(msg)
 
-        active_checklists.update_one({"name":checklist_name},{ "$set": { 'checked': checked } })
-        active_checklists.update_one({"name":checklist_name},{ "$set": { 'unchecked': unchecked } })
+            active_checklists.update_one({"name":checklist_name},{ "$set": { 'checked': checked } })
+            active_checklists.update_one({"name":checklist_name},{ "$set": { 'unchecked': unchecked } })
 
-        len_checked = len(checked)
-        len_unchecked = len(unchecked)
-        checked_string = f"People who have been checked off: ({len_checked}) \n"
-        for names in checked:
-            checked_string += names
-            checked_string += "\n"
-        unchecked_string = f"People who have NOT been checked off: ({len_unchecked}) \n"
-        for names in unchecked:
-            unchecked_string += names
-            unchecked_string += "\n"
+            len_checked = len(checked)
+            len_unchecked = len(unchecked)
+            checked_string = f"People who have been checked off: ({len_checked}) \n"
+            for names in checked:
+                checked_string += names
+                checked_string += "\n"
+            unchecked_string = f"People who have NOT been checked off: ({len_unchecked}) \n"
+            for names in unchecked:
+                unchecked_string += names
+                unchecked_string += "\n"
 
-        update_obj.message.reply_text(f"The updated checklist is as follows:", reply_markup=telegram.ReplyKeyboardRemove())
-        update_obj.message.reply_text(checked_string)
-        update_obj.message.reply_text(unchecked_string)
+            update_obj.message.reply_text(f"The updated checklist is as follows:", reply_markup=telegram.ReplyKeyboardRemove())
+            update_obj.message.reply_text(checked_string)
+            update_obj.message.reply_text(unchecked_string)
+        else:
+            update_obj.message.reply_text(f"Invalid input, name not in roster:", reply_markup=telegram.ReplyKeyboardRemove())
         return ConversationHandler.END
     except Exception as e:
         cancel(e, context)
