@@ -94,11 +94,13 @@ def entername(update_obj, context):
         active_checklists.update_one({"name":checklist_name},{ "$set": { 'checked': checked } })
         active_checklists.update_one({"name":checklist_name},{ "$set": { 'unchecked': unchecked } })
 
-        checked_string = "People who have been checked off: \n"
+        len_checked = len(checked)
+        len_unchecked = len(unchecked)
+        checked_string = f"People who have been checked off: ({len_checked}) \n"
         for names in checked:
             checked_string += names
             checked_string += "\n"
-        unchecked_string = "People who have NOT been checked off: \n"
+        unchecked_string = f"People who have NOT been checked off: ({len_unchecked}) \n"
         for names in unchecked:
             unchecked_string += names
             unchecked_string += "\n"

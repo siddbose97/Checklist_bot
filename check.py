@@ -26,6 +26,7 @@ def checkcl(update_obj, context):
         if arr_of_checklists:
             
             list1 = [[telegram.KeyboardButton(text=checklist_name)] for checklist_name in arr_of_checklists]
+            list1.append([telegram.KeyboardButton(text="QUIT")])
             kb = telegram.ReplyKeyboardMarkup(keyboard=list1,resize_keyboard = True, one_time_keyboard = True)
 
             update_obj.message.reply_text("Please choose a checklist from the following active lists",reply_markup=kb)
@@ -40,6 +41,10 @@ def printcl(update_obj, context):
       
     try:
         msg = update_obj.message.text
+
+        if msg == "QUIT":
+            cancel(update_obj, context)
+            return ConversationHandler.END
 
         load_dotenv()
         mongo_string = str(os.getenv('MONGO_STRING'))
@@ -58,11 +63,11 @@ def printcl(update_obj, context):
 
             len_checked = len(checked)
             len_unchecked = len(unchecked)
-            checked_string = f"People who have been checked off: {len_checked} \n"
+            checked_string = f"People who have been checked off: ({len_checked}) \n"
             for names in checked:
                 checked_string += names
                 checked_string += "\n"
-            unchecked_string = f"People who have NOT been checked off: {len_unchecked} \n"
+            unchecked_string = f"People who have NOT been checked off: ({len_unchecked}) \n"
             for names in unchecked:
                 unchecked_string += names
                 unchecked_string += "\n"
